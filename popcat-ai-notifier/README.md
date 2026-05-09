@@ -31,9 +31,3 @@ ChatGPT 앱처럼 macOS 알림센터에 완료 알림을 남기지 않는 앱은
 3. `PopcatAI`를 허용합니다.
 
 Codex CLI는 sandbox 안에서 로컬 HTTP 연결이 막혀도 `/private/tmp/popcat-ai-notifier/inbox` 파일 큐 fallback으로 이벤트를 전달합니다.
-
-## 체크섬
-
-```text
-SHA-256: a46cbce00a35597326cd3bd65caa4b1612fedf35e8ab45d05f06dd016927b66a
-```
