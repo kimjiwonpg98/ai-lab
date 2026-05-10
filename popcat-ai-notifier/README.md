@@ -20,7 +20,8 @@ Codex, Claude Code, Gemini CLI, Kiro 같은 AI 작업 도구가 승인 요청을
 - Gemini CLI: hook 또는 로컬 패치 기반으로 이벤트를 전달합니다.
 - Kiro CLI: agent hook의 `preToolUse`, `stop` 이벤트를 사용합니다.
 - Codex/Claude/ChatGPT/Gemini/Kiro 데스크톱 앱: macOS 알림센터에 알림을 남기는 경우에만 fallback으로 감지합니다.
-- Claude Code가 Claude 앱 내부나 터미널/Cursor/Warp 같은 호스트 앱을 통해 macOS 알림을 남기는 경우도 알림 제목/본문에 `Claude`, `Claude Code`, `Anthropic`이 들어 있으면 감지합니다.
+- Claude Code가 Claude 앱 내부나 터미널/Cursor/Warp 같은 호스트 앱을 통해 macOS 알림을 남기는 경우도 감지합니다.
+- 데스크톱 앱 fallback은 오탐을 줄이기 위해 AI 이름과 함께 `permission`, `allow`, `completed`, `ready`, `failed`, `승인`, `허용`, `완료`, `실패` 같은 작업 이벤트 단어가 들어간 알림만 울립니다.
 
 ChatGPT 앱처럼 macOS 알림센터에 완료 알림을 남기지 않는 앱은 공식 hook이 없으면 안정적으로 감지하기 어렵습니다. Kiro는 CLI hook이 있어서 CLI 사용 시에는 안정적으로 감지할 수 있습니다.
 
