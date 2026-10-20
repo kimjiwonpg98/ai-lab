@@ -4,7 +4,7 @@ enum PetStyle: Int, CaseIterable {
     case video = 0, cheerleader = 1, rakko = 2
     var title: String {
         switch self {
-        case .video: return "영상 춤 우사기"
+        case .video: return "우사기춤"
         case .cheerleader: return "치어리더 우사기"
         case .rakko: return "모찌 먹는 랏코"
         }

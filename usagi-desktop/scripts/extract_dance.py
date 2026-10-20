@@ -23,10 +23,13 @@ for index in range(24):
     ok, full = video.read()
     if not ok:
         raise SystemExit(f"Missing source frame {index}")
-    # A fixed viewport preserves the original body movement and scale.
-    full = cv2.resize(full, (514, 360))
-    crop = full[90:270, 185:350].copy()
-    hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
+    # Analyze at the reference resolution, but keep native pixels for output.
+    # Scaling the existing 360p frames would not recover image detail.
+    sx, sy = full.shape[1] / 514, full.shape[0] / 360
+    crop = full[round(90 * sy):round(270 * sy),
+                round(185 * sx):round(350 * sx)].copy()
+    analysis = cv2.resize(full, (514, 360))[90:270, 185:350]
+    hsv = cv2.cvtColor(analysis, cv2.COLOR_BGR2HSV)
     skin = cv2.inRange(hsv, (0, 35, 165), (35, 150, 255))
     count, labels, stats, centers = cv2.connectedComponentsWithStats(skin)
     candidates = [i for i in range(1, count)
@@ -40,9 +43,13 @@ for index in range(24):
     contours, _ = cv2.findContours(body, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     body[:] = 0
     cv2.drawContours(body, contours, -1, 255, cv2.FILLED)
+    body = cv2.resize(body, (crop.shape[1], crop.shape[0]), interpolation=cv2.INTER_NEAREST)
+    def kernel(size):
+        scaled = max(3, round(size * sy)) | 1
+        return np.ones((scaled, scaled), np.uint8)
     inner = body.copy()
-    outer = cv2.dilate(body, np.ones((9, 9), np.uint8))
-    likely = cv2.dilate(body, np.ones((5, 5), np.uint8))
+    outer = cv2.dilate(body, kernel(9))
+    likely = cv2.dilate(body, kernel(5))
     mask = np.zeros(body.shape, np.uint8)
     mask[outer > 0] = cv2.GC_PR_BGD
     mask[likely > 0] = cv2.GC_PR_FGD
@@ -52,7 +59,7 @@ for index in range(24):
     alpha = np.uint8((mask == cv2.GC_FGD) | (mask == cv2.GC_PR_FGD)) * 255
     contours, _ = cv2.findContours(alpha, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     alpha[:] = 0
-    cv2.drawContours(alpha, [c for c in contours if cv2.contourArea(c) > 100],
+    cv2.drawContours(alpha, [c for c in contours if cv2.contourArea(c) > 100 * sx * sy],
                      -1, 255, cv2.FILLED)
     # The original dark ink outline sits just outside the cream color mask.
     alpha = cv2.dilate(alpha, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3)))
@@ -71,7 +78,8 @@ sheet = Image.new("RGB", (165 * 6, 200 * 4), "#e5e9ee")
 draw = ImageDraw.Draw(sheet)
 for index, frame in enumerate(frames):
     x, y = (index % 6) * 165, (index // 6) * 200
-    sheet.paste(frame, (x, y), frame)
+    thumbnail = frame.resize((165, 180), Image.Resampling.LANCZOS)
+    sheet.paste(thumbnail, (x, y), thumbnail)
     draw.text((x + 6, y + 181), f"{13 + index/30:.2f}s", fill="#263342")
 sheet.save(ROOT / "dance-contact.png")
 frames[0].save(ROOT / "dance-preview.gif", save_all=True, append_images=frames[1:],
