@@ -2,14 +2,14 @@
 set -euo pipefail
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 APP_DIR="$PROJECT_DIR/dist/Usagi Desktop.app"
-DMG="$PROJECT_DIR/dist/Usagi-Desktop-0.2.0-universal.dmg"
+DMG="$PROJECT_DIR/dist/Usagi-Desktop-0.3.0-universal.dmg"
 STAGING="$(mktemp -d "${TMPDIR:-/tmp}/usagi-dmg.XXXXXX")"
 trap 'rm -rf "$STAGING"' EXIT
 bash "$PROJECT_DIR/scripts/build.sh"
 ditto "$APP_DIR" "$STAGING/Usagi Desktop.app"
 ln -s /Applications "$STAGING/Applications"
 cat > "$STAGING/설치 안내.txt" <<'TEXT'
-Usagi Desktop 0.2.0
+Usagi Desktop 0.3.0
 
 설치: Usagi Desktop.app을 Applications 폴더로 드래그하세요.
 실행: Applications에서 Usagi Desktop을 실행하세요.

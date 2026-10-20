@@ -1,11 +1,12 @@
 import AppKit
 
 enum PetStyle: Int, CaseIterable {
-    case video = 0, cheerleader = 1
+    case video = 0, cheerleader = 1, rakko = 2
     var title: String {
         switch self {
         case .video: return "영상 춤 우사기"
         case .cheerleader: return "치어리더 우사기"
+        case .rakko: return "모찌 먹는 랏코"
         }
     }
 }
@@ -32,10 +33,13 @@ final class PetView: NSView {
         return image
     }
 
-    private let danceFrames: [NSImage] = (0..<24).map { index in
+    private let danceFrames = PetView.loadFrames("DanceFrames", count: 24)
+    private let rakkoFrames = PetView.loadFrames("RakkoFrames", count: 48)
+    private static func loadFrames(_ directory: String, count: Int) -> [NSImage] {
+        (0..<count).map { index in
         let name = String(format: "frame-%03d", index)
         guard let url = Bundle.main.url(forResource: name, withExtension: "png",
-                                        subdirectory: "DanceFrames"),
+                                        subdirectory: directory),
               let image = NSImage(contentsOf: url),
               let data = image.tiffRepresentation,
               let bitmap = NSBitmapImageRep(data: data) else {
@@ -45,6 +49,7 @@ final class PetView: NSView {
         let decoded = NSImage(size: image.size)
         decoded.addRepresentation(bitmap)
         return decoded
+        }
     }
 
     override func draw(_ dirtyRect: NSRect) {
@@ -74,8 +79,12 @@ final class PetView: NSView {
         var rotation = AffineTransform()
         rotation.rotate(byDegrees: held ? -12 : 0)
         (rotation as NSAffineTransform).concat()
-        let frame = Int(playbackTime * 30) % danceFrames.count
-        danceFrames[frame].draw(in: NSRect(x: -105, y: -114.5, width: 210, height: 229),
+        let frames = style == .rakko ? rakkoFrames : danceFrames
+        let frame = Int(playbackTime * 30) % frames.count
+        let rect = style == .rakko
+            ? NSRect(x: -95, y: -116, width: 190, height: 232)
+            : NSRect(x: -105, y: -114.5, width: 210, height: 229)
+        frames[frame].draw(in: rect,
                    from: .zero, operation: .sourceOver, fraction: 1)
     }
     override func mouseDown(with event: NSEvent) {
@@ -129,8 +138,8 @@ final class PetApp: NSObject, NSApplicationDelegate {
         window.hidesOnDeactivate = false; window.isReleasedWhenClosed = false
         pet = PetView(frame: NSRect(origin: .zero, size: window.frame.size))
         pet.autoresizingMask = [.width, .height]
-        pet.toolTip = "클릭: 춤 / 드래그: 이동 / 우클릭: 메뉴"
-        pet.setAccessibilityLabel("춤추는 우사기")
+        pet.toolTip = "클릭: 움직임 정지·재개 / 드래그: 이동 / 우클릭: 메뉴"
+        pet.setAccessibilityLabel(pet.style.title)
         pet.onMenu = { [weak self] in self?.showMenu() }
         window.contentView = pet
         resetPosition(nil)
@@ -218,7 +227,7 @@ final class PetApp: NSObject, NSApplicationDelegate {
         let characterItem = NSMenuItem(title: "캐릭터 선택", action: nil, keyEquivalent: "")
         characterItem.submenu = characters
         menu.addItem(characterItem)
-        menu.addItem(item(pet.dancing ? "춤 쉬기" : "춤추기", #selector(toggleDance)))
+        menu.addItem(item(pet.dancing ? "움직임 멈추기" : "움직임 재개", #selector(toggleDance)))
         let followItem = item("마우스 따라가기", #selector(toggleFollowMouse))
         followItem.state = followsMouse ? .on : .off
         menu.addItem(followItem)
@@ -237,7 +246,7 @@ final class PetApp: NSObject, NSApplicationDelegate {
             entry.state = Int((pet.speed * 100).rounded()) == value ? .on : .off
             speeds.addItem(entry)
         }
-        let speedItem = NSMenuItem(title: "춤 속도", action: nil, keyEquivalent: "")
+        let speedItem = NSMenuItem(title: "재생 속도", action: nil, keyEquivalent: "")
         speedItem.submenu = speeds; menu.addItem(speedItem)
         menu.addItem(item("화면 구석으로 데려오기", #selector(resetPosition(_:))))
         menu.addItem(.separator())
@@ -248,6 +257,7 @@ final class PetApp: NSObject, NSApplicationDelegate {
     @objc func selectStyle(_ sender: NSMenuItem) {
         guard let style = PetStyle(rawValue: sender.tag) else { return }
         pet.style = style
+        pet.setAccessibilityLabel(style.title)
         pet.playbackTime = 0
         pet.needsDisplay = true
         UserDefaults.standard.set(style.rawValue, forKey: "petStyle")
@@ -288,6 +298,7 @@ let app = NSApplication.shared
 if CommandLine.arguments.contains("--preview") {
     let view = PetView(frame: NSRect(x: 0, y: 0, width: 480, height: 557))
     view.style = CommandLine.arguments.contains("--cheerleader") ? .cheerleader : .video
+    if CommandLine.arguments.contains("--rakko") { view.style = .rakko }
     view.playbackTime = 0.6
     let bitmap = view.bitmapImageRepForCachingDisplay(in: view.bounds)!
     view.cacheDisplay(in: view.bounds, to: bitmap)

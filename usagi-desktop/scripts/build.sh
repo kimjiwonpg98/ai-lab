@@ -5,6 +5,8 @@ APP_DIR="$PROJECT_DIR/dist/Usagi Desktop.app"
 mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources" "$PROJECT_DIR/.build/module-cache"
 mkdir -p "$APP_DIR/Contents/Resources/DanceFrames"
 cp "$PROJECT_DIR"/Assets/DanceFrames/frame-*.png "$APP_DIR/Contents/Resources/DanceFrames/"
+mkdir -p "$APP_DIR/Contents/Resources/RakkoFrames"
+cp "$PROJECT_DIR"/Assets/RakkoFrames/frame-*.png "$APP_DIR/Contents/Resources/RakkoFrames/"
 cp "$PROJECT_DIR/Assets/usagi-dance.png" "$PROJECT_DIR/Assets/usagi-idle.png" "$APP_DIR/Contents/Resources/"
 for ARCH in arm64 x86_64; do
   xcrun swiftc "$PROJECT_DIR/Sources/main.swift" -o "$PROJECT_DIR/.build/UsagiDesktop-$ARCH" \
@@ -21,8 +23,8 @@ cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
 <key>CFBundleIdentifier</key><string>local.playground.usagi-desktop</string>
 <key>CFBundleName</key><string>Usagi Desktop</string>
 <key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleShortVersionString</key><string>0.2.0</string>
-<key>CFBundleVersion</key><string>1</string>
+<key>CFBundleShortVersionString</key><string>0.3.0</string>
+<key>CFBundleVersion</key><string>3</string>
 <key>LSMinimumSystemVersion</key><string>13.0</string>
 <key>LSUIElement</key><true/>
 <key>NSHighResolutionCapable</key><true/>
