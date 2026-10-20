@@ -1,10 +1,10 @@
-# Usagi Desktop
+# 먼작귀 칭구들
 
 ## 다운로드 및 설치
 
-[macOS 설치용 DMG 다운로드](https://github.com/kimjiwonpg98/ai-lab/releases/download/usagi-v0.3.1/Usagi-Desktop-0.3.1-universal.dmg)
+[macOS 설치용 DMG 다운로드](https://github.com/kimjiwonpg98/ai-lab/releases/download/usagi-v0.4.0/Meonjakgwi-Friends-0.4.0-universal.dmg)
 
-1. DMG를 열고 `Usagi Desktop.app`을 `Applications` 폴더로 드래그합니다.
+1. DMG를 열고 `먼작귀 칭구들.app`을 `Applications` 폴더로 드래그합니다.
 2. 응용 프로그램에서 앱을 실행합니다. 메뉴 막대에 🐰가 표시됩니다.
 
 macOS 13 이상, Apple Silicon·Intel 통합 빌드입니다. 현재 개발 머신에서 실행을 확인했으며
@@ -13,6 +13,13 @@ Apple 개발자 인증서 서명·공증이 없는 개인 프로젝트이므로 
 출처를 확인한 뒤 시스템 설정 → 개인정보 보호 및 보안 → 확인 없이 열기로 승인할 수 있습니다.
 
 ## 기능
+
+v0.4.0: 앱 이름을 **먼작귀 칭구들**로 변경하고, 지정한 나무위키 페이지의 대표 이미지를 앱 아이콘으로 적용했습니다.
+**울먹이는 치이카와**, **간식 먹는 치이카와** 두 캐릭터를 1080p 영상에서 추출해 추가했습니다.
+첫 장면은 컷 전환 이후 전신이 나오는 45.60~49.00초(102프레임), 두 번째는 55.00~57.00초(60프레임)입니다.
+두 캐릭터 모두 512×512 투명 프레임이며 클릭 정지·재개, 크기·속도 조절, 마우스 따라가기를 지원합니다.
+기존 앱은 종료한 뒤 새 이름의 앱을 설치하세요. 이전 `Usagi Desktop.app`은 수동으로 삭제할 수 있습니다.
+캐릭터 선택·위치·마우스 따라가기 설정은 기존과 같은 저장 공간을 사용해 유지됩니다.
 
 v0.3.1: **우사기춤** 이름 변경 및 1080p 원본 기반 고화질 프레임 적용.
 
@@ -37,20 +44,21 @@ v0.3.0: **모찌 먹는 랏코**를 캐릭터 선택에 추가했습니다.
 
 ```sh
 bash scripts/build.sh
-open "dist/Usagi Desktop.app"
+open "dist/먼작귀 칭구들.app"
 ```
 
 빌드에는 Xcode Command Line Tools, 실행에는 macOS 13 이상이 필요합니다.
 생성된 앱을 Applications 폴더로 복사해도 됩니다. 로컬 임시 서명이며 공증된 배포용 빌드는 아닙니다.
 
 설치용 DMG 생성: `bash scripts/package-dmg.sh`
+아이콘 재생성: `bash scripts/make-icon.sh` (원본 포스터 전체를 보존해 macOS 아이콘 규격으로 변환)
 
 ## 조작
 
 - 클릭: 춤 시작 / 정지
 - 드래그: 이동 (위치 자동 저장)
 - 우클릭 또는 Control-클릭: 메뉴
-- **캐릭터 선택**: “우사기춤” / “치어리더 우사기” / “모찌 먹는 랏코” 전환. 선택은 재실행 후에도 유지됩니다.
+- **캐릭터 선택**: “우사기춤” / “치어리더 우사기” / “모찌 먹는 랏코” / “울먹이는 치이카와” / “간식 먹는 치이카와” 전환. 선택은 재실행 후에도 유지됩니다.
   치어리더는 이전 PNG 이미지에 흔들림과 점프를 적용한 버전이며, 춤을 쉬면 대기 이미지로 바뀝니다.
   모든 캐릭터가 크기·속도 조절과 마우스 따라가기를 지원합니다.
 - 메뉴 막대 🐰: 숨기기 / 다시 표시, 크기, 춤 속도, 위치 초기화, 종료
@@ -77,9 +85,10 @@ bash scripts/build.sh
 
 `dance-contact.png`는 전체 프레임 검수용 이미지이며, `dance-preview.gif`는 동작 미리보기입니다.
 랏코 추출: `python scripts/extract_rakko.py /path/to/rakko-video.mp4`
+치이카와 추출: `python scripts/extract_chiikawa.py cry /path/to/first-video.mp4` 또는 `snack /path/to/second-video.mp4`.
 
 ## 미리보기 생성
 
 ```sh
-"dist/Usagi Desktop.app/Contents/MacOS/UsagiDesktop" --preview /tmp/usagi-preview.png
+"dist/먼작귀 칭구들.app/Contents/MacOS/UsagiDesktop" --preview /tmp/usagi-preview.png
 ```

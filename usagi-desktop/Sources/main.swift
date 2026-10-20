@@ -1,18 +1,22 @@
 import AppKit
 
 enum PetStyle: Int, CaseIterable {
-    case video = 0, cheerleader = 1, rakko = 2
+    case video = 0, cheerleader = 1, rakko = 2, chiikawaCry = 3, chiikawaSnack = 4
     var title: String {
         switch self {
         case .video: return "우사기춤"
         case .cheerleader: return "치어리더 우사기"
         case .rakko: return "모찌 먹는 랏코"
+        case .chiikawaCry: return "울먹이는 치이카와"
+        case .chiikawaSnack: return "간식 먹는 치이카와"
         }
     }
 }
 
 final class PetView: NSView {
-    var style = PetStyle(rawValue: UserDefaults.standard.integer(forKey: "petStyle")) ?? .video
+    var style = PetStyle(rawValue: UserDefaults.standard.integer(forKey: "petStyle")) ?? .video {
+        didSet { cachedFrames = [] }
+    }
     var dancing = true
     var speed = 1.0
     var playbackTime = 0.0
@@ -33,8 +37,19 @@ final class PetView: NSView {
         return image
     }
 
-    private let danceFrames = PetView.loadFrames("DanceFrames", count: 24)
-    private let rakkoFrames = PetView.loadFrames("RakkoFrames", count: 48)
+    private var cachedFrames: [NSImage] = []
+    private func animationFrames() -> [NSImage] {
+        if cachedFrames.isEmpty {
+            switch style {
+            case .video: cachedFrames = PetView.loadFrames("DanceFrames", count: 24)
+            case .rakko: cachedFrames = PetView.loadFrames("RakkoFrames", count: 48)
+            case .chiikawaCry: cachedFrames = PetView.loadFrames("ChiikawaCryFrames", count: 102)
+            case .chiikawaSnack: cachedFrames = PetView.loadFrames("ChiikawaSnackFrames", count: 60)
+            case .cheerleader: break
+            }
+        }
+        return cachedFrames
+    }
     private static func loadFrames(_ directory: String, count: Int) -> [NSImage] {
         (0..<count).map { index in
         let name = String(format: "frame-%03d", index)
@@ -79,11 +94,14 @@ final class PetView: NSView {
         var rotation = AffineTransform()
         rotation.rotate(byDegrees: held ? -12 : 0)
         (rotation as NSAffineTransform).concat()
-        let frames = style == .rakko ? rakkoFrames : danceFrames
+        let frames = animationFrames()
         let frame = Int(playbackTime * 30) % frames.count
-        let rect = style == .rakko
-            ? NSRect(x: -95, y: -116, width: 190, height: 232)
-            : NSRect(x: -105, y: -114.5, width: 210, height: 229)
+        let rect: NSRect
+        switch style {
+        case .rakko: rect = NSRect(x: -95, y: -116, width: 190, height: 232)
+        case .chiikawaCry, .chiikawaSnack: rect = NSRect(x: -115, y: -115, width: 230, height: 230)
+        default: rect = NSRect(x: -105, y: -114.5, width: 210, height: 229)
+        }
         frames[frame].draw(in: rect,
                    from: .zero, operation: .sourceOver, fraction: 1)
     }
@@ -153,7 +171,7 @@ final class PetApp: NSObject, NSApplicationDelegate {
         }
         status = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         status.button?.title = "🐰"
-        status.button?.toolTip = "Usagi Desktop"
+        status.button?.toolTip = "먼작귀 칭구들"
         status.button?.target = self; status.button?.action = #selector(showMenu)
         window.orderFrontRegardless()
         timer = Timer(timeInterval: 1.0 / 30, repeats: true) { [weak self] _ in
@@ -216,7 +234,7 @@ final class PetApp: NSObject, NSApplicationDelegate {
         menuIsOpen = true
         defer { menuIsOpen = false }
         let menu = NSMenu()
-        let heading = NSMenuItem(title: "USAGI · 작은 춤 친구", action: nil, keyEquivalent: "")
+        let heading = NSMenuItem(title: "먼작귀 칭구들", action: nil, keyEquivalent: "")
         menu.addItem(heading); menu.addItem(.separator())
         let characters = NSMenu()
         for style in PetStyle.allCases {
@@ -299,6 +317,8 @@ if CommandLine.arguments.contains("--preview") {
     let view = PetView(frame: NSRect(x: 0, y: 0, width: 480, height: 557))
     view.style = CommandLine.arguments.contains("--cheerleader") ? .cheerleader : .video
     if CommandLine.arguments.contains("--rakko") { view.style = .rakko }
+    if CommandLine.arguments.contains("--chiikawa-cry") { view.style = .chiikawaCry }
+    if CommandLine.arguments.contains("--chiikawa-snack") { view.style = .chiikawaSnack }
     view.playbackTime = 0.6
     let bitmap = view.bitmapImageRepForCachingDisplay(in: view.bounds)!
     view.cacheDisplay(in: view.bounds, to: bitmap)

@@ -1,13 +1,18 @@
 #!/bin/bash
 set -euo pipefail
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-APP_DIR="$PROJECT_DIR/dist/Usagi Desktop.app"
+APP_DIR="$PROJECT_DIR/dist/먼작귀 칭구들.app"
 mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources" "$PROJECT_DIR/.build/module-cache"
 mkdir -p "$APP_DIR/Contents/Resources/DanceFrames"
 cp "$PROJECT_DIR"/Assets/DanceFrames/frame-*.png "$APP_DIR/Contents/Resources/DanceFrames/"
 mkdir -p "$APP_DIR/Contents/Resources/RakkoFrames"
 cp "$PROJECT_DIR"/Assets/RakkoFrames/frame-*.png "$APP_DIR/Contents/Resources/RakkoFrames/"
+for FRAMES in ChiikawaCryFrames ChiikawaSnackFrames; do
+  mkdir -p "$APP_DIR/Contents/Resources/$FRAMES"
+  cp "$PROJECT_DIR/Assets/$FRAMES/"frame-*.png "$APP_DIR/Contents/Resources/$FRAMES/"
+done
 cp "$PROJECT_DIR/Assets/usagi-dance.png" "$PROJECT_DIR/Assets/usagi-idle.png" "$APP_DIR/Contents/Resources/"
+cp "$PROJECT_DIR/Assets/AppIcon.icns" "$APP_DIR/Contents/Resources/"
 for ARCH in arm64 x86_64; do
   xcrun swiftc "$PROJECT_DIR/Sources/main.swift" -o "$PROJECT_DIR/.build/UsagiDesktop-$ARCH" \
     -target "$ARCH-apple-macos13.0" -framework AppKit -O \
@@ -21,10 +26,12 @@ cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
 <plist version="1.0"><dict>
 <key>CFBundleExecutable</key><string>UsagiDesktop</string>
 <key>CFBundleIdentifier</key><string>local.playground.usagi-desktop</string>
-<key>CFBundleName</key><string>Usagi Desktop</string>
+<key>CFBundleName</key><string>먼작귀 칭구들</string>
+<key>CFBundleDisplayName</key><string>먼작귀 칭구들</string>
+<key>CFBundleIconFile</key><string>AppIcon</string>
 <key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleShortVersionString</key><string>0.3.1</string>
-<key>CFBundleVersion</key><string>4</string>
+<key>CFBundleShortVersionString</key><string>0.4.0</string>
+<key>CFBundleVersion</key><string>5</string>
 <key>LSMinimumSystemVersion</key><string>13.0</string>
 <key>LSUIElement</key><true/>
 <key>NSHighResolutionCapable</key><true/>

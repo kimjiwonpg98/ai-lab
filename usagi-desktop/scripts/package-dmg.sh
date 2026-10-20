@@ -1,18 +1,18 @@
 #!/bin/bash
 set -euo pipefail
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-APP_DIR="$PROJECT_DIR/dist/Usagi Desktop.app"
-DMG="$PROJECT_DIR/dist/Usagi-Desktop-0.3.1-universal.dmg"
+APP_DIR="$PROJECT_DIR/dist/먼작귀 칭구들.app"
+DMG="$PROJECT_DIR/dist/Meonjakgwi-Friends-0.4.0-universal.dmg"
 STAGING="$(mktemp -d "${TMPDIR:-/tmp}/usagi-dmg.XXXXXX")"
 trap 'rm -rf "$STAGING"' EXIT
 bash "$PROJECT_DIR/scripts/build.sh"
-ditto "$APP_DIR" "$STAGING/Usagi Desktop.app"
+ditto "$APP_DIR" "$STAGING/먼작귀 칭구들.app"
 ln -s /Applications "$STAGING/Applications"
 cat > "$STAGING/설치 안내.txt" <<'TEXT'
-Usagi Desktop 0.3.1
+먼작귀 칭구들 0.4.0
 
-설치: Usagi Desktop.app을 Applications 폴더로 드래그하세요.
-실행: Applications에서 Usagi Desktop을 실행하세요.
+설치: 먼작귀 칭구들.app을 Applications 폴더로 드래그하세요.
+실행: Applications에서 먼작귀 칭구들을 실행하세요.
 종료: 메뉴 막대의 토끼 아이콘 → 종료.
 
 macOS 13 이상 / Apple Silicon 및 Intel Mac 지원.
@@ -26,7 +26,7 @@ macOS가 실행을 차단하면 다운로드 출처를 확인한 뒤
 캐릭터와 영상의 권리는 각 권리자에게 있습니다.
 소스 및 출처: https://github.com/kimjiwonpg98/ai-lab/tree/master/usagi-desktop
 TEXT
-hdiutil create -volname "Usagi Desktop" -srcfolder "$STAGING" \
+hdiutil create -volname "먼작귀 칭구들" -srcfolder "$STAGING" \
   -format UDZO -ov "$DMG"
 hdiutil verify "$DMG"
 (cd "$PROJECT_DIR/dist" && shasum -a 256 "$(basename "$DMG")") > "$DMG.sha256"

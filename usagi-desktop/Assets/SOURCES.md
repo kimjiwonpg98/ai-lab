@@ -1,5 +1,26 @@
 # 이미지 출처
 
+## 치이카와 두 장면
+
+- 울먹이는 치이카와: https://www.youtube.com/watch?v=f8_JB4t34S0
+  사용자 지정 45~49초 중 클로즈업 컷 이후인 45.60~49.00초, 102프레임.
+- 간식 먹는 치이카와: https://www.youtube.com/watch?v=Ph_dKzMNx58
+  사용자 지정 55초 전후인 55.00~57.00초, 60프레임.
+- 두 영상 모두 1920×1080 원본(약 29.97fps)에서 512×512 RGBA PNG로 추출.
+- `ChiikawaCryFrames` / `ChiikawaSnackFrames`: 흰 몸 색상과 갈색 윤곽선 시드, GrabCut 배경 제거.
+- 간식 장면의 카메라 움직임은 캐릭터 위치 추적으로 보정. 음원은 포함하지 않음.
+- 캐릭터 및 영상 권리는 해당 권리자에게 있음.
+
+## 앱 아이콘
+
+- 사용자 지정 페이지: https://namu.wiki/w/먼가%20작고%20귀여운%20녀석(TVA)
+- 페이지 상단 대표 이미지(alt: 먼작귀 애니).
+- 원본 이미지: https://i.namu.wiki/i/SreJORZ7BJjcfDBzrYed-UqzuHEfjcStH-bY8hsTkPutuEP30bukrrv3XWd9TrlznnEetn0CqSA9WTkuKUeWJYvAesZld_L_7zxFtbTSpZ2qgPIwVpkpOiTT8UmAJuosSmdX-nly2lmo6UXkvPCG7A.webp
+- `app-icon-source.webp`를 그대로 보관하고, 전체 이미지를 비율 유지하여 아이콘에 배치.
+- `app-icon.png`, `AppIcon.icns`는 macOS 설치용 아이콘 포맷.
+- 원본 캐릭터 및 이미지의 권리는 해당 권리자에게 있음.
+
+
 ## 랏코의 디저트 먹는 장면
 
 - 사용자 지정 영상: https://www.youtube.com/watch?v=PN0VmWYBRII
