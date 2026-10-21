@@ -1,6 +1,6 @@
 """Extract Chiikawa from the two user-selected 1080p clips.
 
-python extract_chiikawa.py cry|snack /path/to/video.mp4
+python extract_chiikawa.py cry|snack|clover /path/to/video.mp4
 Requires numpy, opencv-python-headless and pillow.
 """
 from pathlib import Path
@@ -10,16 +10,19 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 kind, source = sys.argv[1:3]
-if kind not in ("cry", "snack"):
-    raise SystemExit("Choose cry or snack")
+if kind not in ("cry", "snack", "clover"):
+    raise SystemExit("Choose cry, snack or clover")
 root = Path(__file__).resolve().parents[1]
 directory, start, count = ("ChiikawaCryFrames", 45.6, 102) if kind == "cry" else ("ChiikawaSnackFrames", 55.0, 60)
+if kind == "clover":
+    directory, start, count = "ChiikawaCloverFrames", 6.6, 72
+canvas = 640 if kind == "clover" else 512
 out = root / "Assets" / directory
 out.mkdir(parents=True, exist_ok=True)
 cap = cv2.VideoCapture(source)
 cap.set(cv2.CAP_PROP_POS_MSEC, start * 1000)
 frames = []
-previous = np.array([615, 230] if kind == "cry" else [340, 305])
+previous = np.array([615, 230] if kind == "cry" else ([490, 240] if kind == "clover" else [340, 305]))
 for index in range(count):
     ok, full = cap.read()
     if not ok:
@@ -44,13 +47,15 @@ for index in range(count):
     # Fixed camera for crying; track camera motion in the snack scene.
     if kind == "cry":
         cx, cy = 1230, 455
+    elif kind == "clover":
+        cx, cy = 960, 460
     else:
         x, y, w, h, _ = stats[selected]
         cx, cy = int((x + w / 2) * 2), int((y + h / 2) * 2)
-    left, top = cx - 256, cy - 256
-    crop = full[top:top+512, left:left+512].copy()
-    body = cv2.resize(body, (1920, 1080), interpolation=cv2.INTER_NEAREST)[top:top+512, left:left+512]
-    mask = np.zeros((512, 512), np.uint8)
+    left, top = cx - canvas // 2, cy - canvas // 2
+    crop = full[top:top+canvas, left:left+canvas].copy()
+    body = cv2.resize(body, (1920, 1080), interpolation=cv2.INTER_NEAREST)[top:top+canvas, left:left+canvas]
+    mask = np.zeros((canvas, canvas), np.uint8)
     outer = cv2.dilate(body, np.ones((27, 27), np.uint8))
     probable = cv2.dilate(body, np.ones((15, 15), np.uint8))
     mask[outer > 0] = cv2.GC_PR_BGD

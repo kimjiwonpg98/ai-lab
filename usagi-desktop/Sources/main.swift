@@ -1,7 +1,7 @@
 import AppKit
 
 enum PetStyle: Int, CaseIterable {
-    case video = 0, cheerleader = 1, rakko = 2, chiikawaCry = 3, chiikawaSnack = 4
+    case video = 0, cheerleader = 1, rakko = 2, chiikawaCry = 3, chiikawaSnack = 4, chiikawaClover = 5
     var title: String {
         switch self {
         case .video: return "우사기춤"
@@ -9,6 +9,7 @@ enum PetStyle: Int, CaseIterable {
         case .rakko: return "모찌 먹는 랏코"
         case .chiikawaCry: return "울먹이는 치이카와"
         case .chiikawaSnack: return "간식 먹는 치이카와"
+        case .chiikawaClover: return "클로버 치이카와"
         }
     }
 }
@@ -45,6 +46,7 @@ final class PetView: NSView {
             case .rakko: cachedFrames = PetView.loadFrames("RakkoFrames", count: 48)
             case .chiikawaCry: cachedFrames = PetView.loadFrames("ChiikawaCryFrames", count: 102)
             case .chiikawaSnack: cachedFrames = PetView.loadFrames("ChiikawaSnackFrames", count: 60)
+            case .chiikawaClover: cachedFrames = PetView.loadFrames("ChiikawaCloverFrames", count: 72)
             case .cheerleader: break
             }
         }
@@ -99,7 +101,7 @@ final class PetView: NSView {
         let rect: NSRect
         switch style {
         case .rakko: rect = NSRect(x: -95, y: -116, width: 190, height: 232)
-        case .chiikawaCry, .chiikawaSnack: rect = NSRect(x: -115, y: -115, width: 230, height: 230)
+        case .chiikawaCry, .chiikawaSnack, .chiikawaClover: rect = NSRect(x: -115, y: -115, width: 230, height: 230)
         default: rect = NSRect(x: -105, y: -114.5, width: 210, height: 229)
         }
         frames[frame].draw(in: rect,
@@ -319,6 +321,7 @@ if CommandLine.arguments.contains("--preview") {
     if CommandLine.arguments.contains("--rakko") { view.style = .rakko }
     if CommandLine.arguments.contains("--chiikawa-cry") { view.style = .chiikawaCry }
     if CommandLine.arguments.contains("--chiikawa-snack") { view.style = .chiikawaSnack }
+    if CommandLine.arguments.contains("--chiikawa-clover") { view.style = .chiikawaClover }
     view.playbackTime = 0.6
     let bitmap = view.bitmapImageRepForCachingDisplay(in: view.bounds)!
     view.cacheDisplay(in: view.bounds, to: bitmap)

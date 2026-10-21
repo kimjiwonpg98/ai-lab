@@ -2,7 +2,7 @@
 
 ## 다운로드 및 설치
 
-[macOS 설치용 DMG 다운로드](https://github.com/kimjiwonpg98/ai-lab/releases/download/usagi-v0.4.0/Meonjakgwi-Friends-0.4.0-universal.dmg)
+[macOS 설치용 DMG 다운로드](https://github.com/kimjiwonpg98/ai-lab/releases/download/usagi-v0.4.1/Meonjakgwi-Friends-0.4.1-universal.dmg)
 
 1. DMG를 열고 `먼작귀 칭구들.app`을 `Applications` 폴더로 드래그합니다.
 2. 응용 프로그램에서 앱을 실행합니다. 메뉴 막대에 🐰가 표시됩니다.
@@ -13,6 +13,8 @@ Apple 개발자 인증서 서명·공증이 없는 개인 프로젝트이므로 
 출처를 확인한 뒤 시스템 설정 → 개인정보 보호 및 보안 → 확인 없이 열기로 승인할 수 있습니다.
 
 ## 기능
+
+v0.4.1: **클로버 치이카와** 추가. 지정한 6~9초 중 원경 이후 6.60~9.00초 구간을 사용하며, 1080p 원본에서 640×640 투명 프레임 72장으로 추출했습니다.
 
 v0.4.0: 앱 이름을 **먼작귀 칭구들**로 변경하고, 지정한 나무위키 페이지의 대표 이미지를 앱 아이콘으로 적용했습니다.
 **울먹이는 치이카와**, **간식 먹는 치이카와** 두 캐릭터를 1080p 영상에서 추출해 추가했습니다.
@@ -58,7 +60,7 @@ open "dist/먼작귀 칭구들.app"
 - 클릭: 춤 시작 / 정지
 - 드래그: 이동 (위치 자동 저장)
 - 우클릭 또는 Control-클릭: 메뉴
-- **캐릭터 선택**: “우사기춤” / “치어리더 우사기” / “모찌 먹는 랏코” / “울먹이는 치이카와” / “간식 먹는 치이카와” 전환. 선택은 재실행 후에도 유지됩니다.
+- **캐릭터 선택**: “우사기춤” / “치어리더 우사기” / “모찌 먹는 랏코” / “울먹이는 치이카와” / “간식 먹는 치이카와” / “클로버 치이카와” 전환. 선택은 재실행 후에도 유지됩니다.
   치어리더는 이전 PNG 이미지에 흔들림과 점프를 적용한 버전이며, 춤을 쉬면 대기 이미지로 바뀝니다.
   모든 캐릭터가 크기·속도 조절과 마우스 따라가기를 지원합니다.
 - 메뉴 막대 🐰: 숨기기 / 다시 표시, 크기, 춤 속도, 위치 초기화, 종료
@@ -92,3 +94,5 @@ bash scripts/build.sh
 ```sh
 "dist/먼작귀 칭구들.app/Contents/MacOS/UsagiDesktop" --preview /tmp/usagi-preview.png
 ```
+
+클로버 장면 추출: `python scripts/extract_chiikawa.py clover /path/to/video.mp4`
