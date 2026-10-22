@@ -15,3 +15,9 @@ DMG를 열고 앱을 Applications 폴더로 드래그해 설치하세요.
 ## Popcat AI Notifier
 
 [프로젝트 안내](popcat-ai-notifier/README.md)
+
+### 먼작귀 칭구들 v0.4.2
+
+- [Windows EXE](https://github.com/kimjiwonpg98/ai-lab/releases/download/friends-v0.4.2/Meonjakgwi-Friends.exe)
+- [macOS DMG](https://github.com/kimjiwonpg98/ai-lab/releases/download/friends-v0.4.2/Meonjakgwi-Friends-0.4.2-universal.dmg)
+- 캐릭터 7종, 마우스 따라가기, 클릭 정지, 드래그 이동 지원.

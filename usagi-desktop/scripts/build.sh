@@ -7,7 +7,7 @@ mkdir -p "$APP_DIR/Contents/Resources/DanceFrames"
 cp "$PROJECT_DIR"/Assets/DanceFrames/frame-*.png "$APP_DIR/Contents/Resources/DanceFrames/"
 mkdir -p "$APP_DIR/Contents/Resources/RakkoFrames"
 cp "$PROJECT_DIR"/Assets/RakkoFrames/frame-*.png "$APP_DIR/Contents/Resources/RakkoFrames/"
-for FRAMES in ChiikawaCryFrames ChiikawaSnackFrames ChiikawaCloverFrames; do
+for FRAMES in ChiikawaCryFrames ChiikawaSnackFrames ChiikawaCloverFrames ChiikawaDanceFrames; do
   mkdir -p "$APP_DIR/Contents/Resources/$FRAMES"
   cp "$PROJECT_DIR/Assets/$FRAMES/"frame-*.png "$APP_DIR/Contents/Resources/$FRAMES/"
 done
@@ -30,8 +30,8 @@ cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
 <key>CFBundleDisplayName</key><string>먼작귀 칭구들</string>
 <key>CFBundleIconFile</key><string>AppIcon</string>
 <key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleShortVersionString</key><string>0.4.1</string>
-<key>CFBundleVersion</key><string>6</string>
+<key>CFBundleShortVersionString</key><string>0.4.2</string>
+<key>CFBundleVersion</key><string>7</string>
 <key>LSMinimumSystemVersion</key><string>13.0</string>
 <key>LSUIElement</key><true/>
 <key>NSHighResolutionCapable</key><true/>

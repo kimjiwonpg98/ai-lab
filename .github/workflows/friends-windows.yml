@@ -44,10 +44,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $tag = 'friends-windows-v0.4.1'
+          $tag = 'friends-v0.4.2'
           gh release view $tag *> $null
           if ($LASTEXITCODE -ne 0) {
-            gh release create $tag --target '${{ github.sha }}' --title 'Meonjakgwi Friends Windows 0.4.1' --notes 'Windows 10/11 x64 portable app. Includes six characters, drag, pause, mouse following, size/speed controls and tray menu. Automated Windows launch and asset checks passed; interactive desktop behavior has not been manually verified. Unsigned executable. The newly requested qJjz52K0ZvE 30-32s clip is not included in this build.'
+            gh release create $tag --target '${{ github.sha }}' --title 'Meonjakgwi Friends 0.4.2' --notes 'Windows 10/11 x64 portable app. Includes seven characters, drag, pause, mouse following, size/speed controls and tray menu. Automated Windows launch and asset checks passed; interactive desktop behavior has not been manually verified. Unsigned executable. Includes dancing Chiikawa from qJjz52K0ZvE at 30-32 seconds.'
             if ($LASTEXITCODE -ne 0) { throw 'Release creation failed' }
           }
           gh release upload $tag dist/Meonjakgwi-Friends.exe dist/Meonjakgwi-Friends.exe.sha256 --clobber

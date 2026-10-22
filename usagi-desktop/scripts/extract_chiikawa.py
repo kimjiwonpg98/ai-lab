@@ -10,19 +10,22 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 kind, source = sys.argv[1:3]
-if kind not in ("cry", "snack", "clover"):
+if kind not in ("cry", "snack", "clover", "dance"):
     raise SystemExit("Choose cry, snack or clover")
 root = Path(__file__).resolve().parents[1]
 directory, start, count = ("ChiikawaCryFrames", 45.6, 102) if kind == "cry" else ("ChiikawaSnackFrames", 55.0, 60)
 if kind == "clover":
     directory, start, count = "ChiikawaCloverFrames", 6.6, 72
-canvas = 640 if kind == "clover" else 512
+if kind == "dance":
+    directory, start, count = "ChiikawaDanceFrames", 30.0, 60
+canvas = 760 if kind == "dance" else (640 if kind == "clover" else 512)
 out = root / "Assets" / directory
 out.mkdir(parents=True, exist_ok=True)
 cap = cv2.VideoCapture(source)
 cap.set(cv2.CAP_PROP_POS_MSEC, start * 1000)
 frames = []
 previous = np.array([615, 230] if kind == "cry" else ([490, 240] if kind == "clover" else [340, 305]))
+if kind == "dance": previous = np.array([450, 350])
 for index in range(count):
     ok, full = cap.read()
     if not ok:
@@ -31,10 +34,12 @@ for index in range(count):
         raise SystemExit("Expected 1920×1080 source")
     small = cv2.resize(full, (960, 540), interpolation=cv2.INTER_AREA)
     hsv = cv2.cvtColor(small, cv2.COLOR_BGR2HSV)
-    white = cv2.inRange(hsv, (0, 0, 218), (179, 40, 255))
+    white = cv2.inRange(hsv, (0, 0, 218), (179, 20 if kind == "dance" else 40, 255))
+    if kind == "dance":
+        white = np.uint8((hsv[:,:,1] < 40) & (hsv[:,:,2] > 180) & (small[:,:,0].astype(int) >= small[:,:,1].astype(int)-7)) * 255
     n, labels, stats, centers = cv2.connectedComponentsWithStats(white)
     candidates = [i for i in range(1, n) if stats[i, 4] > 4000
-                  and np.linalg.norm(centers[i] - previous) < 100]
+                  and np.linalg.norm(centers[i] - previous) < (240 if kind == "dance" else 100)]
     if not candidates:
         raise SystemExit(f"Character not found: {index}")
     selected = min(candidates, key=lambda i: np.linalg.norm(centers[i] - previous))
@@ -52,12 +57,14 @@ for index in range(count):
     else:
         x, y, w, h, _ = stats[selected]
         cx, cy = int((x + w / 2) * 2), int((y + h / 2) * 2)
-    left, top = cx - canvas // 2, cy - canvas // 2
+    left, top = max(0, min(cx - canvas // 2, 1920-canvas)), max(0, min(cy - canvas // 2, 1080-canvas))
     crop = full[top:top+canvas, left:left+canvas].copy()
     body = cv2.resize(body, (1920, 1080), interpolation=cv2.INTER_NEAREST)[top:top+canvas, left:left+canvas]
     mask = np.zeros((canvas, canvas), np.uint8)
-    outer = cv2.dilate(body, np.ones((27, 27), np.uint8))
-    probable = cv2.dilate(body, np.ones((15, 15), np.uint8))
+    outer_size = 81 if kind == "dance" else 27
+    outer = cv2.dilate(body, np.ones((141 if kind == "dance" else outer_size, outer_size), np.uint8))
+    probable_size = 61 if kind == "dance" else 15
+    probable = cv2.dilate(body, np.ones((121 if kind == "dance" else probable_size, probable_size), np.uint8))
     mask[outer > 0] = cv2.GC_PR_BGD
     mask[probable > 0] = cv2.GC_PR_FGD
     mask[body > 0] = cv2.GC_FGD

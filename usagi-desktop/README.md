@@ -2,7 +2,7 @@
 
 ## 다운로드 및 설치
 
-[macOS 설치용 DMG 다운로드](https://github.com/kimjiwonpg98/ai-lab/releases/download/usagi-v0.4.1/Meonjakgwi-Friends-0.4.1-universal.dmg)
+[macOS 설치용 DMG 다운로드](https://github.com/kimjiwonpg98/ai-lab/releases/download/friends-v0.4.2/Meonjakgwi-Friends-0.4.2-universal.dmg)
 
 1. DMG를 열고 `먼작귀 칭구들.app`을 `Applications` 폴더로 드래그합니다.
 2. 응용 프로그램에서 앱을 실행합니다. 메뉴 막대에 🐰가 표시됩니다.
@@ -13,6 +13,8 @@ Apple 개발자 인증서 서명·공증이 없는 개인 프로젝트이므로 
 출처를 확인한 뒤 시스템 설정 → 개인정보 보호 및 보안 → 확인 없이 열기로 승인할 수 있습니다.
 
 ## 기능
+
+v0.4.2: Windows EXE 지원 및 **춤추는 치이카와** 추가. 1080p 영상의 30~32초에서 추출한 60프레임입니다. 원본의 컷 전환과 크기 변화도 포함합니다.
 
 v0.4.1: **클로버 치이카와** 추가. 지정한 6~9초 중 원경 이후 6.60~9.00초 구간을 사용하며, 1080p 원본에서 640×640 투명 프레임 72장으로 추출했습니다.
 
@@ -99,13 +101,13 @@ bash scripts/build.sh
 
 ## Windows 실행 파일
 
-[Windows EXE 다운로드](https://github.com/kimjiwonpg98/ai-lab/releases/download/friends-windows-v0.4.1/Meonjakgwi-Friends.exe)
+[Windows EXE 다운로드](https://github.com/kimjiwonpg98/ai-lab/releases/download/friends-v0.4.2/Meonjakgwi-Friends.exe)
 
 Windows 10/11 64비트용 단일 실행 파일입니다. 별도 Python 설치 없이 실행하며,
 캐릭터 우클릭 또는 알림 영역 아이콘에서 캐릭터·마우스 따라가기·크기·속도를 선택합니다.
 클릭으로 정지/재생, 드래그로 이동하며 알림 영역 아이콘을 더블클릭하면 숨기거나 표시합니다.
 종료는 우클릭 메뉴에서 선택하세요. 설정은 Windows 사용자별로 저장됩니다.
-현재 macOS판의 캐릭터 6종을 포함하며 새로 요청한 qJjz52K0ZvE 30~32초 영상은 아직 포함하지 않습니다.
+캐릭터 7종을 포함하며 qJjz52K0ZvE 영상의 30~32초 동작을 “춤추는 치이카와”로 추가했습니다.
 서명되지 않은 개인 배포 파일이며 자동 Windows 시작 검사와 프레임 로딩 검사를 수행합니다.
 Windows 실사용 환경에서의 수동 조작 검증은 별도로 필요합니다.
 

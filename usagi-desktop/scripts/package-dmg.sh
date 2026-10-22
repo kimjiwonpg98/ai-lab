@@ -2,14 +2,14 @@
 set -euo pipefail
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 APP_DIR="$PROJECT_DIR/dist/먼작귀 칭구들.app"
-DMG="$PROJECT_DIR/dist/Meonjakgwi-Friends-0.4.1-universal.dmg"
+DMG="$PROJECT_DIR/dist/Meonjakgwi-Friends-0.4.2-universal.dmg"
 STAGING="$(mktemp -d "${TMPDIR:-/tmp}/usagi-dmg.XXXXXX")"
 trap 'rm -rf "$STAGING"' EXIT
 bash "$PROJECT_DIR/scripts/build.sh"
 ditto "$APP_DIR" "$STAGING/먼작귀 칭구들.app"
 ln -s /Applications "$STAGING/Applications"
 cat > "$STAGING/설치 안내.txt" <<'TEXT'
-먼작귀 칭구들 0.4.1
+먼작귀 칭구들 0.4.2
 
 설치: 먼작귀 칭구들.app을 Applications 폴더로 드래그하세요.
 실행: Applications에서 먼작귀 칭구들을 실행하세요.

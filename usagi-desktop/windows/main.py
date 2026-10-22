@@ -1,4 +1,5 @@
 """Windows desktop companion. All media stays local."""
+import ctypes
 import math
 import sys
 import time
@@ -12,6 +13,7 @@ STYLES = [
     ('우사기춤', 'DanceFrames'), ('치어리더 우사기', None),
     ('모찌 먹는 랏코', 'RakkoFrames'), ('울먹이는 치이카와', 'ChiikawaCryFrames'),
     ('간식 먹는 치이카와', 'ChiikawaSnackFrames'), ('클로버 치이카와', 'ChiikawaCloverFrames'),
+    ('춤추는 치이카와', 'ChiikawaDanceFrames'),
 ]
 
 class Pet(QWidget):
@@ -125,6 +127,12 @@ class Pet(QWidget):
         rect = QApplication.primaryScreen().availableGeometry()
         self.move(rect.right()-self.width()-24, rect.bottom()-self.height()-24)
 
+    @staticmethod
+    def mouse_is_down():
+        if sys.platform == "win32":
+            return any(ctypes.windll.user32.GetAsyncKeyState(key) & 0x8000 for key in (1, 2, 4))
+        return QApplication.mouseButtons() != Qt.MouseButton.NoButton
+
     def tick(self):
         now = time.monotonic()
         dt = min(now-self.last_tick, .1)
@@ -134,7 +142,7 @@ class Pet(QWidget):
             self.elapsed += dt*self.speed
             self.update()
         cursor = QCursor.pos()
-        if self.follow and self.press is None and not self.menu_open and QApplication.mouseButtons() == Qt.MouseButton.NoButton and not self.geometry().contains(cursor):
+        if self.follow and self.press is None and not self.menu_open and not self.mouse_is_down() and not self.geometry().contains(cursor):
             screen = QApplication.screenAt(cursor) or QApplication.primaryScreen()
             r = screen.availableGeometry()
             x = cursor.x()+24
