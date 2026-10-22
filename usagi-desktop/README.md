@@ -96,3 +96,19 @@ bash scripts/build.sh
 ```
 
 클로버 장면 추출: `python scripts/extract_chiikawa.py clover /path/to/video.mp4`
+
+## Windows 실행 파일
+
+[Windows EXE 다운로드](https://github.com/kimjiwonpg98/ai-lab/releases/download/friends-windows-v0.4.1/Meonjakgwi-Friends.exe)
+
+Windows 10/11 64비트용 단일 실행 파일입니다. 별도 Python 설치 없이 실행하며,
+캐릭터 우클릭 또는 알림 영역 아이콘에서 캐릭터·마우스 따라가기·크기·속도를 선택합니다.
+클릭으로 정지/재생, 드래그로 이동하며 알림 영역 아이콘을 더블클릭하면 숨기거나 표시합니다.
+종료는 우클릭 메뉴에서 선택하세요. 설정은 Windows 사용자별로 저장됩니다.
+현재 macOS판의 캐릭터 6종을 포함하며 새로 요청한 qJjz52K0ZvE 30~32초 영상은 아직 포함하지 않습니다.
+서명되지 않은 개인 배포 파일이며 자동 Windows 시작 검사와 프레임 로딩 검사를 수행합니다.
+Windows 실사용 환경에서의 수동 조작 검증은 별도로 필요합니다.
+
+Windows 소스 실행: `python windows/main.py` (먼저 `pip install -r windows/requirements.txt`).
+Windows 빌드: PowerShell에서 `./windows/build.ps1`.
+GitHub Actions의 `Friends Windows` 워크플로에서도 빌드 및 실행 검사를 진행합니다.

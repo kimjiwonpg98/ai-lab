@@ -1,0 +1,54 @@
+name: Friends Windows
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - 'usagi-desktop/windows/**'
+      - '.github/workflows/friends-windows.yml'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: usagi-desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build executable
+        shell: pwsh
+        run: ./windows/build.ps1
+      - name: Check all characters and packaged launch
+        shell: pwsh
+        run: |
+          $env:QT_QPA_PLATFORM = 'offscreen'
+          python windows/main.py --smoke-test
+          if ($LASTEXITCODE -ne 0) { throw 'Character smoke test failed' }
+          $process = Start-Process -FilePath dist/Meonjakgwi-Friends.exe -ArgumentList '--smoke-test' -PassThru
+          if (-not $process.WaitForExit(120000)) { $process.Kill(); throw 'Packaged app timed out' }
+          if ($process.ExitCode -ne 0) { throw "Packaged app failed: $($process.ExitCode)" }
+          $hash = (Get-FileHash dist/Meonjakgwi-Friends.exe -Algorithm SHA256).Hash.ToLower()
+          "$hash  Meonjakgwi-Friends.exe" | Set-Content -Encoding ascii dist/Meonjakgwi-Friends.exe.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Meonjakgwi-Friends-Windows
+          path: |
+            usagi-desktop/dist/Meonjakgwi-Friends.exe
+            usagi-desktop/dist/Meonjakgwi-Friends.exe.sha256
+      - name: Publish Windows download
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = 'friends-windows-v0.4.1'
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --target '${{ github.sha }}' --title 'Meonjakgwi Friends Windows 0.4.1' --notes 'Windows 10/11 x64 portable app. Includes six characters, drag, pause, mouse following, size/speed controls and tray menu. Automated Windows launch and asset checks passed; interactive desktop behavior has not been manually verified. Unsigned executable. The newly requested qJjz52K0ZvE 30-32s clip is not included in this build.'
+            if ($LASTEXITCODE -ne 0) { throw 'Release creation failed' }
+          }
+          gh release upload $tag dist/Meonjakgwi-Friends.exe dist/Meonjakgwi-Friends.exe.sha256 --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Release upload failed' }
